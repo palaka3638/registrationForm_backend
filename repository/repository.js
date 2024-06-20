@@ -48,4 +48,55 @@ async function getUserByEmail(email) {
     partialResponse.user = response[0].length>0 ?response[0]:null
     return partialResponse
 }
-module.exports={registorUser,getUserByEmail}
+const getUsersDetails = async () => {
+    try {
+        let response = await connectionDB.promise().query(`SELECT * FROM student`);
+        // console.log('response ', response )
+        return response
+    } catch (error) {
+        console.error(error, "error while getting users");
+        throw error;
+    }
+};
+const deleteUser = async(id)=>{
+    try {
+        const [response]= await connectionDB.promise().query("DELETE FROM student WHERE id=?",[id])
+        if(response.affectedRows>0){
+            return {
+                status:200,
+                message: "User deleted successfully"
+            }
+         } else {
+                return {
+                    status:404,
+                    message: "User Not found"
+                }
+            }
+        
+    } catch (error) {
+        console.log(error, "Error in deleting user(repo)")
+    }
+}
+const editUser = async (userId, userDataToUpdate) => {
+    try {
+        console.log('------------ userdata---------', userDataToUpdate)
+        const [response] = await connectionDB.promise().query("UPDATE student SET ? WHERE id = ?", [userDataToUpdate, userId]);
+        console.log("response from repo", response)
+        if (response.affectedRows > 0) {
+            return {
+                status: 200,
+                message: "User updated successfully",
+            };
+        } else {
+            return {
+                status: 404,
+                message: "User not found",
+            };
+        }
+    } catch (error) {
+        console.error('Error in editUser repository:', error);
+        throw error; // Throw the error to be caught by the service layer
+    }
+};
+
+module.exports={registorUser,getUserByEmail,getUsersDetails,deleteUser,editUser}
