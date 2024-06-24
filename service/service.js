@@ -9,7 +9,11 @@ const registerUser = async (registerUserData) => {
     if (user.user) {
       return { status: 404, message: "user already exists!!!!!" };
     }
-
+    let hobbiesArray=[];
+    if(registerUserData?.hobbies){
+      console.log("*##hobbies##*",registerUserData.hobbies)
+      hobbiesArray = registerUserData.hobbies.map(hobby => hobby.trim())
+    }
     const hashPassword = await bcrypt.hash(password, 10); //here 10 is salt rounds
     const registerData = {
       f_name: registerUserData?.fname,
@@ -19,7 +23,7 @@ const registerUser = async (registerUserData) => {
       contact: registerUserData?.contact,
       d_o_b: registerUserData?.dob,
       designation: registerUserData.designation,
-      hobbies: registerUserData.hobbies,
+      hobbies: JSON.stringify(hobbiesArray),
       password: hashPassword,
     };
     const response1 = await formRepository.registorUser(registerData);
@@ -27,11 +31,11 @@ const registerUser = async (registerUserData) => {
       from: "welcome@resend.com",
       to: registerUserData.email,
       subject: "Thanks for Registering with us",
-      html: `<p>Dear User, You have been successfully registered with us. Stay Tuned!.</p>`,
+      html: `<p>Dear User, You have been successfully registered with us. Stay Updated!.</p>`,
     };
-    console.log(response1, "email registered generated");
+    // console.log(response1, "email registered generated");
     const result = await mailService.otpFunc(mail);
-    console.log(result, "result in mail registereation");
+    // console.log(result, "result in mail registereation");
     return { status: 200, message: "user register successfully!!!!!" };
   } catch (error) {
     console.log(error);
@@ -40,7 +44,7 @@ const registerUser = async (registerUserData) => {
 const getAllUsers = async () => {
   try {
     const response = await formRepository.getUsersDetails();
-    // console.log('service:', response)
+    console.log('------------getAll users from service:-------------', response)
     return response;
   } catch (error) {
     console.log("Error while getting users from service: ", error);

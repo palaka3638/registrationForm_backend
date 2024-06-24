@@ -4,7 +4,7 @@ const register = async (req, res) => {
         console.log(req.body);
       const response = await formService.registerUser(req.body).then((response)=>{
             // console.log(response1, 'response from service');
-        return res.status(response.status).send(response)
+        return res.status(123).send(response)
       })
     }catch (error) {
       console.log('Error')
@@ -15,7 +15,7 @@ const register = async (req, res) => {
     try {
       const response = await formService.getAllUsers();
       res.status(200).send(response);
-      console.log("************response**********", response);
+      // console.log("************response**********", response);
     } catch (error) {
       console.error("Error in getting users: ", error);
       res.status(500).send({ error: "Internal Server Error", message: error.message });

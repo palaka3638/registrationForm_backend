@@ -77,11 +77,21 @@ const deleteUser = async(id)=>{
         console.log(error, "Error in deleting user(repo)")
     }
 }
+
 const editUser = async (userId, userDataToUpdate) => {
     try {
-        console.log('------------ userdata---------', userDataToUpdate)
+        // Check if userDataToUpdate has password field
+        if (userDataToUpdate.password) {
+            // Hash the password
+            const hashedPassword = await bcrypt.hash(userDataToUpdate.password, 10); // Salt rounds = 10
+
+            // Update the password in userDataToUpdate with the hashed password
+            userDataToUpdate.password = hashedPassword;
+        }
+
+        // Perform the database update
         const [response] = await connectionDB.promise().query("UPDATE student SET ? WHERE id = ?", [userDataToUpdate, userId]);
-        console.log("response from repo", response)
+        
         if (response.affectedRows > 0) {
             return {
                 status: 200,
@@ -98,5 +108,27 @@ const editUser = async (userId, userDataToUpdate) => {
         throw error; // Throw the error to be caught by the service layer
     }
 };
+
+// const editUser = async (userId, userDataToUpdate) => {
+//     try {
+//         console.log('------------ userdata---------', userDataToUpdate)
+//         const [response] = await connectionDB.promise().query("UPDATE student SET ? WHERE id = ?", [userDataToUpdate, userId]);
+//         console.log("response from repo", response)
+//         if (response.affectedRows > 0) {
+//             return {
+//                 status: 200,
+//                 message: "User updated successfully",
+//             };
+//         } else {
+//             return {
+//                 status: 404,
+//                 message: "User not found",
+//             };
+//         }
+//     } catch (error) {
+//         console.error('Error in editUser repository:', error);
+//         throw error; // Throw the error to be caught by the service layer
+//     }
+// };
 
 module.exports={registorUser,getUserByEmail,getUsersDetails,deleteUser,editUser}
