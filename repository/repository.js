@@ -1,7 +1,7 @@
 const connectionDB = require("../db/db.js");
 const bcrypt = require('bcrypt');
 
-const registorUser = async (data, res) => {
+const registorUser = async (data) => {
     try {
         const [response] = await connectionDB.promise().query("Insert into RegisterationForm.student SET ?", data)
         if (response) {
@@ -79,6 +79,7 @@ const deleteUser = async(id)=>{
 }
 
 const editUser = async (userId, userDataToUpdate) => {
+    // console.log(userDataToUpdate,"userDataToUpdate in edit repo")
     try {
         // Check if userDataToUpdate has password field
         if (userDataToUpdate.password) {
