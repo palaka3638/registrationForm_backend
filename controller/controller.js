@@ -1,5 +1,6 @@
 const formService = require("../service/service");
 const register = async (req, res) => {
+  console.log(req.body, 4564);
   try {
     const response = await formService
       .registerUser(req.body)
@@ -43,6 +44,7 @@ const editUser = async (req, res) => {
     // const userDataToUpdate = req.body;
 
     let { password, confirmPassword, hobbies, ...userDataToUpdate } = req.body;
+    console.log('request body ', req.body)
     const hobbiesString = Array.isArray(hobbies) ? hobbies.join(", ") : "";
 
     console.log(

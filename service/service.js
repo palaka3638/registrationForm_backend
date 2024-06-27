@@ -4,6 +4,7 @@ const mailService = require("../utils/mailService");
 
 const registerUser = async (registerUserData) => {
   try {
+    console.log(registerUserData,"registerUserData");
     let password = registerUserData?.password;
     let user = await formRepository.getUserByEmail(registerUserData?.email);
 
@@ -21,11 +22,11 @@ const registerUser = async (registerUserData) => {
 
     const registerData = {
       f_name: registerUserData?.f_name,
+      // fileImage:registerUserData?.fileImage,
       l_name: registerUserData?.l_name,
       gender: registerUserData?.gender,
       email: registerUserData?.email,
       contact: registerUserData?.contact,
-      countryCode: registerUserData?.countryCode,
       d_o_b: registerUserData?.d_o_b,
       designation: registerUserData.designation,
       hobbies: JSON.stringify(hobbiesArray),
