@@ -2,7 +2,8 @@ const controller = require("../controller/controller");
 const express = require("express");
 const multer = require('multer');
 const path = require('path');
-
+const validateRequest = require('../middleware/validationMiddleware')
+const JoiSchema = require('../middleware/validationMiddleware')
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
         cb(null, './uploads/');
@@ -30,11 +31,20 @@ const upload = multer({
 let router = express.Router();
 
 router.get("/getallusers", controller.getUsers);
-router.post("/register", controller.register);
+
+
+router.post("/register", validateRequest(),(req,res)=>{res.json({
+    message:'Successfully registered',
+    data:req.value.body,
+})},controller.register);
+
+
 router.put("/edituser/:id", upload.single('fileImage'), (req, res, next) => {
     req.body.fileImage = req.file.filename; 
     controller.editUser(req, res, next);
 });
+
+
 router.delete("/deleteuser/:id", controller.deleteUser);
 
 module.exports = router;
